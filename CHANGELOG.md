@@ -25,7 +25,7 @@ All notable changes to this project will be documented in this file.
     -Basic error handling implemented to ensure reliable data transmission in case of network issues.
  - Frontend UI Development:
     -Basic user interface (UI) created using React/Next.js.
-    -Dashboard designed to display real-time sensor data (temperature, humidity, and moisture) 
+    -Dashboard designed to display sensor data (temperature, humidity, and moisture) 
      received via WebSocket connection.
     -UI components added for displaying sensor data in a table format
     -Responsive design implemented to ensure compatibility with desktop and mobile devices.
