@@ -1,0 +1,22 @@
+/* Dashboard.module.css*/
+
+.cardsContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: space-between;
+  margin-top: 40px;
+  margin-bottom: 40px;
+
+  @media (max-width: 640px) {
+    justify-content: center;
+  }
+}
+
+.card {
+  border: none;
+
+  @media (max-width: 576px) {
+    border: none;
+  }
+}
