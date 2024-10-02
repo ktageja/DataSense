@@ -5,7 +5,6 @@ import Image from "next/image";
 import ExpandableItem from "@/components/Item/ExpandableItem";
 import SimpleItem from "@/components/Item/SimpleItem";
 import Link from "next/link";
-
 import DownloadImg from "@/public/assets/images/download.webp";
 import DeviceImage from "@/public/assets/images/device.webp";
 import DtaImage from "@/public/assets/images/data.webp";

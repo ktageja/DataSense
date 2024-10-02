@@ -1,0 +1,35 @@
+.sidebar {
+  position: fixed; /* Keep the sidebar fixed */
+  top: 0;
+  left: 0;
+  width: 250px; /* Sidebar width */
+  height: 100%; /* Full height */
+  background-color: #fff; /* Background color */
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5); /* Shadow effect */
+  transform: translateX(-100%); /* Hide off-screen by default */
+  transition: transform 0.3s ease; /* Smooth transition */
+  z-index: 1000; /* Make sure it's above other content */
+}
+
+.sidebar.active {
+  transform: translateX(0); /* Show sidebar when active */
+}
+
+.hamburger {
+  cursor: pointer; /* Change cursor to pointer */
+  position: fixed; /* Fix the button */
+  top: 20px; /* Position from top */
+  left: 20px; /* Position from left */
+  z-index: 1001; /* Above sidebar */
+}
+
+/* Optional styles for responsiveness */
+@media (min-width: 768px) {
+  .sidebar {
+    transform: translateX(0); /* Always show on larger screens */
+  }
+
+  .hamburger {
+    display: none; /* Hide hamburger on larger screens */
+  }
+}
