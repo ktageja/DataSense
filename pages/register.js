@@ -3,8 +3,11 @@ import { useRouter } from "next/router";
 import Image from "next/image";
 import { Button } from "react-bootstrap";
 import { registerUser } from "@/lib/authenticate";
+import { userAtom } from "../store/store";
+import { useAtom } from "jotai";
 
 const Register = () => {
+  const [user, setUser] = useAtom(userAtom);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -36,7 +39,8 @@ const Register = () => {
 
     // If validation passes, attempt to create the user
     try {
-      await registerUser(email, password);
+      const userData = await registerUser(email, password);
+      setUser(userData);
       router.push("/dashboard"); // Redirect to dashboard after successful registration
     } catch (error) {
       console.error(error);

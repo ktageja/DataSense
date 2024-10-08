@@ -3,6 +3,10 @@ import Sidebar from "./sidebar";
 import Header from "./header";
 import { createContext, useEffect, useState } from "react";
 import config from "@/pages/api/config.json";
+import { useRouter } from "next/router";
+import { useAtom } from "jotai";
+import { userAtom } from "@/store/store";
+import { readToken } from "@/lib/authenticate";
 
 // Create Contexts for Realtime Data and Theme
 export const RealtimeDataContext = createContext(null);
@@ -11,6 +15,21 @@ export const ThemeContext = createContext(null);
 const Layout = ({ children }) => {
   const [realtimeData, setRealtimeData] = useState(null);
   const [theme, setTheme] = useState("light");
+  const router = useRouter();
+  const [user, setUser] = useAtom(userAtom);
+
+  useEffect(() => {
+    let userFromToken = readToken();
+    if (userFromToken) {
+      setUser(userFromToken);
+    }
+
+    if (!userFromToken) {
+      if (!["/login", "/register"].includes(window.location.pathname)) {
+        router.replace("/login");
+      }
+    }
+  }, [router]);
 
   useEffect(() => {
     // Connect to the WebSocket server

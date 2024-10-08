@@ -3,33 +3,24 @@ import { Form, Alert, Button } from "react-bootstrap";
 import { loginUser } from "@/lib/authenticate";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
-import { favouritesAtom, searchHistoryAtom } from "../store/store";
+import { favouritesAtom, searchHistoryAtom, userAtom } from "../store/store";
 import { useAtom } from "jotai";
 import Image from "next/image"; // Corrected import for Image component
 
 export default function Login(props) {
-  const { data, status } = useSession();
-  console.log({ data, status });
+  const { data, status } = useSession(); // google login, or other oauth.
 
-  // const [historyList, setSearchHistory] = useAtom(searchHistoryAtom);
-
+  const [user, setUser] = useAtom(userAtom);
   const [warning, setWarning] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
 
-  // async function updateAtoms() {
-  //   // setSearchHistory(await getHistory());
-  // }
   async function handleLoginWithEmailPassword(e) {
     e.preventDefault();
-    console.log("login with email/password is not implemented!");
     try {
-      await loginUser(email, password);
-
-      // await updateAtoms();
-      // console.log("2");
-
+      const userData = await loginUser(email, password); // call backend, get token, store token
+      setUser(userData);
       router.push("/dashboard");
     } catch (err) {
       setWarning(err.message);
@@ -48,10 +39,11 @@ export default function Login(props) {
   // };
   useEffect(() => {
     if (status === "authenticated" && data) {
+      // google login
       console.log({ data });
       router.push("/dashboard");
     }
-  }, [data, status]);
+  }, [data, status, router]);
 
   return (
     <>
@@ -70,8 +62,8 @@ export default function Login(props) {
             <Form.Control
               placeholder="Email"
               type="text"
-              id="userName"
-              name="userName"
+              id="email"
+              name="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
