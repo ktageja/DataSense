@@ -2,8 +2,12 @@ import { useState } from "react";
 import { useRouter } from "next/router";
 import Image from "next/image";
 import { Button } from "react-bootstrap";
+import { registerUser } from "@/lib/authenticate";
+import { userAtom } from "../store/store";
+import { useAtom } from "jotai";
 
 const Register = () => {
+  const [user, setUser] = useAtom(userAtom);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -16,7 +20,7 @@ const Register = () => {
     return passwordRegex.test(password);
   };
 
-  const handleRegister = async (e) => {
+  const handleRegisterWithEmailPassword = async (e) => {
     e.preventDefault();
 
     // Check if the passwords match
@@ -35,9 +39,11 @@ const Register = () => {
 
     // If validation passes, attempt to create the user
     try {
-      await createUserWithEmailAndPassword(auth, email, password);
+      const userData = await registerUser(email, password);
+      setUser(userData);
       router.push("/dashboard"); // Redirect to dashboard after successful registration
     } catch (error) {
+      console.error(error);
       setError(error.message);
     }
   };
@@ -66,7 +72,7 @@ const Register = () => {
     >
       <h1 className="pt-3 pb-3">Join today.</h1>
       {error && <p style={{ color: "red" }}>{error}</p>}
-      <form onSubmit={handleRegister}>
+      <form onSubmit={handleRegisterWithEmailPassword}>
         <div>
           <input
             className="form-control text-center mt-2 mb-1"

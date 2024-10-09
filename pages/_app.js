@@ -7,9 +7,9 @@ import { useEffect } from "react"; // Import useEffect to load JS
 export default function App({ Component, pageProps }) {
   useEffect(() => {
     // Dynamically import Bootstrap JS to enable interactive components
-    typeof document !== "undefined"
-      ? require("bootstrap/dist/js/bootstrap.bundle.min.js")
-      : null;
+    if (typeof window !== "undefined") {
+      require("bootstrap/dist/js/bootstrap.bundle.min.js");
+    }
   }, []); // Only run once on mount
 
   return (

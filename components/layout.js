@@ -1,15 +1,35 @@
-import Navbar from "./navbar";
 import Footer from "./footer";
-import { createContext, useContext, useEffect, useState } from "react";
+import Sidebar from "./sidebar";
+import Header from "./header";
+import { createContext, useEffect, useState } from "react";
 import config from "@/pages/api/config.json";
+import { useRouter } from "next/router";
+import { useAtom } from "jotai";
+import { userAtom } from "@/store/store";
+import { readToken } from "@/lib/authenticate";
 
-// import "bootstrap/dist/css/bootstrap.min.css";
+// Create Contexts for Realtime Data and Theme
 export const RealtimeDataContext = createContext(null);
 export const ThemeContext = createContext(null);
 
 const Layout = ({ children }) => {
   const [realtimeData, setRealtimeData] = useState(null);
   const [theme, setTheme] = useState("light");
+  const router = useRouter();
+  const [user, setUser] = useAtom(userAtom);
+
+  useEffect(() => {
+    let userFromToken = readToken();
+    if (userFromToken) {
+      setUser(userFromToken);
+    }
+
+    if (!userFromToken) {
+      if (!["/login", "/register"].includes(window.location.pathname)) {
+        router.replace("/login");
+      }
+    }
+  }, [router]);
 
   useEffect(() => {
     // Connect to the WebSocket server
@@ -17,7 +37,7 @@ const Layout = ({ children }) => {
 
     ws.onmessage = (event) => {
       const newData = JSON.parse(event.data);
-      console.log("Received realtim data", newData);
+      console.log("Received realtime data", newData);
       setRealtimeData(newData);
     };
 
@@ -28,27 +48,24 @@ const Layout = ({ children }) => {
   }, []);
 
   return (
-    <>
-      <ThemeContext.Provider value={theme}>
-        <RealtimeDataContext.Provider value={realtimeData}>
-          <Navbar />
-          {/* <button
-            onClick={() =>
-              setTheme((prev) => {
-                if (prev === "light") {
-                  return "dark";
-                }
-                return "light";
-              })
-            }
-          >
-            Theme: {theme}
-          </button> */}
-          <main>{children}</main>
+    <ThemeContext.Provider value={theme}>
+      <RealtimeDataContext.Provider value={realtimeData}>
+        <div className="layout">
+          <Header />
+          <div className="content-area d-flex">
+            {" "}
+            {/* Added d-flex for layout */}
+            <Sidebar />
+            <main className="main-content flex-grow-1">
+              {" "}
+              {/* Main content takes available space */}
+              {children}
+            </main>
+          </div>
           <Footer />
-        </RealtimeDataContext.Provider>
-      </ThemeContext.Provider>
-    </>
+        </div>
+      </RealtimeDataContext.Provider>
+    </ThemeContext.Provider>
   );
 };
 

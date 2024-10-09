@@ -1,14 +1,16 @@
 import { RealtimeDataContext } from "@/components/layout";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import styles from "@/styles/Dashboard.module.css"; // Import a custom CSS module
 import Image from "next/image";
 import ExpandableItem from "@/components/Item/ExpandableItem";
 import SimpleItem from "@/components/Item/SimpleItem";
 import Link from "next/link";
-
 import DownloadImg from "@/public/assets/images/download.webp";
 import DeviceImage from "@/public/assets/images/device.webp";
 import DtaImage from "@/public/assets/images/data.webp";
+import { useAtom } from "jotai";
+import { userAtom } from "@/store/store";
+import { useRouter } from "next/router";
 
 /**
  * FE on history page: do GET ALL []  => 10005
@@ -17,6 +19,7 @@ import DtaImage from "@/public/assets/images/data.webp";
  *
  */
 export default function Dashboard() {
+  const [user] = useAtom(userAtom);
   const realtimeData = useContext(RealtimeDataContext);
   const items = [
     {
@@ -49,7 +52,7 @@ export default function Dashboard() {
         style={{ maxWidth: "900px", margin: "0 auto", padding: "20px" }}
       >
         <div className={`container, ${styles.dataBody}`}>
-          <h1 className="m-3 p-3">Welcome back, User</h1>
+          <h1 className="m-3 p-3">Welcome back, {user?.email}</h1>
           <ul className="m-3 p-3">
             <SimpleItem
               className={"mb-3"}

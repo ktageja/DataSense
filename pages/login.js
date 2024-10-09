@@ -1,41 +1,30 @@
 import { useSession, signIn } from "next-auth/react";
-
-import { Card, Form, Alert, Button } from "react-bootstrap";
-import { authenticateUser } from "@/lib/authenticate";
+import { Form, Alert, Button } from "react-bootstrap";
+import { loginUser } from "@/lib/authenticate";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
-import { favouritesAtom, searchHistoryAtom } from "../store/store";
+import { favouritesAtom, searchHistoryAtom, userAtom } from "../store/store";
 import { useAtom } from "jotai";
 import Image from "next/image"; // Corrected import for Image component
 
 export default function Login(props) {
-  const { data, status } = useSession();
-  console.log({ data, status });
+  const { data, status } = useSession(); // google login, or other oauth.
 
-  // const [historyList, setSearchHistory] = useAtom(searchHistoryAtom);
-
+  const [user, setUser] = useAtom(userAtom);
   const [warning, setWarning] = useState("");
-  const [user, setUser] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
 
-  // async function updateAtoms() {
-  //   // setSearchHistory(await getHistory());
-  // }
-  async function handleSubmit(e) {
+  async function handleLoginWithEmailPassword(e) {
     e.preventDefault();
-    console.log("login with email/password is not implemented!");
-    // try {
-    //   await authenticateUser(user, password);
-    //   console.log("1");
-
-    //   await updateAtoms();
-    //   console.log("2");
-
-    //   router.push("/dashboard");
-    // } catch (err) {
-    //   setWarning(err.message);
-    // }
+    try {
+      const userData = await loginUser(email, password); // call backend, get token, store token
+      setUser(userData);
+      router.push("/dashboard");
+    } catch (err) {
+      setWarning(err.message);
+    }
   }
 
   // const handleGoogleLogIn = async () => {
@@ -50,10 +39,11 @@ export default function Login(props) {
   // };
   useEffect(() => {
     if (status === "authenticated" && data) {
+      // google login
       console.log({ data });
       router.push("/dashboard");
     }
-  }, [data, status]);
+  }, [data, status, router]);
 
   return (
     <>
@@ -67,15 +57,15 @@ export default function Login(props) {
       >
         <h1>Welcome back.</h1>
         <br />
-        <Form onSubmit={handleSubmit}>
+        <Form onSubmit={handleLoginWithEmailPassword}>
           <Form.Group>
             <Form.Control
               placeholder="Email"
               type="text"
-              id="userName"
-              name="userName"
-              value={user}
-              onChange={(e) => setUser(e.target.value)}
+              id="email"
+              name="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
             />
           </Form.Group>
           <br />
@@ -101,7 +91,15 @@ export default function Login(props) {
             <Button variant="primary" className="pull-right p-1" type="submit">
               Login
             </Button>
-            <Button variant="primary" className="pull-right p-1" type="submit">
+            <Button
+              variant="primary"
+              className="pull-right p-1"
+              type="submit"
+              onClick={() => {
+                setEmail("");
+                setPassword("");
+              }}
+            >
               Cancel
             </Button>
           </div>
