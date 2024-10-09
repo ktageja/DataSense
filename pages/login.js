@@ -55,7 +55,7 @@ export default function Login(props) {
           textAlign: "center",
         }}
       >
-        <h1>Welcome back.</h1>
+        <h1>Welcome back!</h1>
         <br />
         <Form onSubmit={handleLoginWithEmailPassword}>
           <Form.Group>
@@ -88,11 +88,11 @@ export default function Login(props) {
           )}
           <br />
           <div style={{ display: "flex", justifyContent: "space-around" }}>
-            <Button variant="primary" className="pull-right p-1" type="submit">
+            <Button variant="text" className="pull-right p-1" type="submit">
               Login
             </Button>
             <Button
-              variant="primary"
+              variant="text"
               className="pull-right p-1"
               type="submit"
               onClick={() => {
@@ -105,9 +105,12 @@ export default function Login(props) {
           </div>
         </Form>
         <hr />
-        <button
+
+        <Button
           onClick={() => signIn("google")}
-          className="border border-primary rounded-3 bg-transparent p-2"
+          variant="text"
+          className="pull-right p-1"
+          type="submit"
         >
           <Image
             src="/assets/images/search.png"
@@ -115,8 +118,9 @@ export default function Login(props) {
             width={20}
             height={20}
           />
+
           <span className="m-2">Login with Google</span>
-        </button>
+        </Button>
       </div>
     </>
   );

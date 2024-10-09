@@ -1,47 +1,43 @@
 import { RealtimeDataContext } from "@/components/layout";
-import { useContext, useEffect } from "react";
-import styles from "@/styles/Dashboard.module.css"; // Import a custom CSS module
+import { useContext } from "react";
+import styles from "@/styles/Dashboard.module.css"; // Import custom CSS module
 import Image from "next/image";
 import ExpandableItem from "@/components/Item/ExpandableItem";
 import SimpleItem from "@/components/Item/SimpleItem";
 import Link from "next/link";
-import DownloadImg from "@/public/assets/images/download.webp";
-import DeviceImage from "@/public/assets/images/device.webp";
-import DtaImage from "@/public/assets/images/data.webp";
-import { useAtom } from "jotai";
-import { userAtom } from "@/store/store";
-import { useRouter } from "next/router";
 
-/**
- * FE on history page: do GET ALL []  => 10005
- * BE push latest data to FE via socket, then FE display it and push to array
- * @returns
- *
- */
+// Suggested Image Sources
+import DeviceSetupImage from "@/public/assets/images/device-setup.webp"; // Replace with your image
+import DevicesImage from "@/public/assets/images/devices.webp"; // Replace with your image
+import DataImage from "@/public/assets/images/data-graph.webp"; // Replace with your image
+
 export default function Dashboard() {
-  const [user] = useAtom(userAtom);
   const realtimeData = useContext(RealtimeDataContext);
+
   const items = [
     {
-      src: DownloadImg,
+      src: DeviceSetupImage,
       name: "Add Device",
       link: "#",
       buttonText: "Add Device",
       icon: <i className="far fa-plus-square"></i>,
+      color: "#dc3545", // Red color for the card
     },
     {
-      src: DeviceImage,
+      src: DevicesImage,
       name: "Your Devices",
-      link: "#",
-      buttonText: "Your Devices",
+      link: "/devices",
+      buttonText: "Manage Devices",
       icon: <i className="fas fa-laptop me-2"></i>,
+      color: "#28a745", // Green color for the card
     },
     {
-      src: DtaImage,
+      src: DataImage,
       name: "Your Data",
-      link: "#",
-      buttonText: "Your Data",
+      link: "/data",
+      buttonText: "View Data",
       icon: <i className="fas fa-database me-2"></i>,
+      color: "#007bff", // Blue color for the card
     },
   ];
 
@@ -49,82 +45,82 @@ export default function Dashboard() {
     <>
       <div
         className="container"
-        style={{ maxWidth: "900px", margin: "0 auto", padding: "20px" }}
+        style={{ maxWidth: "1200px", margin: "0 auto", padding: "20px" }}
       >
-        <div className={`container, ${styles.dataBody}`}>
-          <h1 className="m-3 p-3">Welcome back, {user?.email}</h1>
-          <ul className="m-3 p-3">
+        <h1 className={`m-3 p-3 text-center ${styles.titleText}`}>
+          Welcome back, User
+        </h1>
+
+        {/* Favorites and Quick View Section */}
+        <div className={styles.dataBody}>
+          <div className={styles.favoritesQuickView}>
+            {/* Favorites Section */}
             <SimpleItem
-              className={"mb-3"}
+              className={`${styles.simpleItem} ${styles.favoritesBackground}`}
               key={"Favourites"}
               title={"Favourites"}
               icon={<i className="fa-solid fa-star"></i>}
             >
               <ul>
-                <li
-                  className="p-2 m-1 mb-6"
-                  style={{
-                    listStyle: "none",
-                    cursor: "pointer",
-                    border: "1px solid grey",
-                    borderRadius: "9px",
-                  }}
-                >
+                <li className={styles.favoriteItem}>
                   <h3>
-                    <Link
-                      href={"/devices/Warehouse"}
-                      style={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                      }}
-                    >
+                    <Link href="/devices/Warehouse">
                       Warehouse
                       <i className="fa-solid fa-square-up-right"></i>
                     </Link>
                   </h3>
                 </li>
               </ul>
-              <div></div>
             </SimpleItem>
+
+            {/* Quick View Section */}
             <SimpleItem
+              className={`${styles.simpleItem} ${styles.quickViewBackground}`}
               key={"Quick View"}
               title={"Quick View"}
               icon={<i className="fa-sharp fa-solid fa-eye"></i>}
             >
               <ul>
-                {realtimeData && (
-                  <ExpandableItem title={realtimeData.device || "Home"}>
-                    <ul>
-                      <li key="date">Date: {realtimeData.timestamp}</li>
-                      <li key="temp">
-                        Temperature: {realtimeData.temperature}
-                      </li>
-                      <li key="humi">Humidity: {realtimeData.humidity}</li>
-                      <li key="mois">Moisture: {realtimeData.moisture}</li>
-                    </ul>
-                  </ExpandableItem>
-                )}
+                <li className={styles.quickViewItem}>
+                  <Link href="/devices/Warehouse">
+                    Warehouse
+                    <i className="fas fa-plus"></i>
+                  </Link>
+                </li>
+                <li className={styles.quickViewItem}>
+                  <Link href="/devices/Home">
+                    Home
+                    <i className="fas fa-plus"></i>
+                  </Link>
+                </li>
+                <li className={styles.quickViewItem}>
+                  <Link href="/devices/Greenhouse">
+                    Greenhouse
+                    <i className="fas fa-plus"></i>
+                  </Link>
+                </li>
               </ul>
             </SimpleItem>
-          </ul>
+          </div>
         </div>
 
-        {/* Responsive Grid */}
+        {/* Card Section for Devices and Data */}
         <div className={styles.cardsContainer}>
           {items.map((item, index) => (
-            <div className={styles.card} key={index}>
+            <div
+              className={`${styles.card} card`}
+              key={index}
+              style={{ backgroundColor: item.color }}
+            >
               <Image
                 src={item.src}
                 className="card-img-top"
                 alt={item.name}
-                width={288} // Example width
-                height={162} // Example height, adjust according to your image's aspect ratio
+                width={300}
+                height={200}
               />
-              <div
-                className="card-body"
-                style={{ display: "flex", justifyContent: "center" }}
-              >
-                <a href={item.link} className="btn btn-basic">
+              <div className="card-body" style={{ textAlign: "center" }}>
+                <a href={item.link} className={`btn ${styles.cardButton}`}>
                   {item.buttonText} {item.icon}
                 </a>
               </div>

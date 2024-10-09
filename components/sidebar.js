@@ -6,9 +6,9 @@ import Link from "next/link";
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
 
-  // Toggle the sidebar
   const toggleSidebar = () => {
     setIsOpen(!isOpen);
+    console.log(isOpen ? "Opening Sidebar" : "Closing Sidebar");
   };
 
   return (
