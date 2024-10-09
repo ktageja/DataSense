@@ -72,7 +72,10 @@ const Register = () => {
     >
       <h1 className="pt-3 pb-3">Join today.</h1>
       {error && <p style={{ color: "red" }}>{error}</p>}
-      <form onSubmit={handleRegisterWithEmailPassword}>
+      <form
+        onSubmit={handleRegisterWithEmailPassword}
+        style={{ display: "flex", gap: "15px", flexDirection: "column" }}
+      >
         <div>
           <input
             className="form-control text-center mt-2 mb-1"
@@ -109,18 +112,14 @@ const Register = () => {
             the terms and conditions
           </label>
         </div>
-        <div style={{ marginTop: "10px" }}>
-          <Button
-            type="submit"
-            variant="primary"
-            className="btn btn-primary p-1"
-          >
+        <div style={{ display: "flex", justifyContent: "space-around" }}>
+          <Button type="submit" variant="text" className="pull-right p-1">
             Register
           </Button>
           <Button
             type="button"
-            variant="primary"
-            className="btn btn-primary p-1"
+            variant="text"
+            className="pull-right p-1"
             onClick={handleCancel}
             style={{ marginLeft: "10px" }}
           >
@@ -129,9 +128,12 @@ const Register = () => {
         </div>
       </form>
       <hr />
-      <button
+
+      <Button
         onClick={handleGoogleSignIn}
-        className="border border-primary rounded-3 bg-transparent p-2"
+        variant="text"
+        className="pull-right p-1"
+        type="submit"
       >
         <Image
           src="/assets/images/search.png"
@@ -139,8 +141,9 @@ const Register = () => {
           width={20}
           height={20}
         />
-        <span className="m-2"> Register with Google</span>
-      </button>
+
+        <span className="m-2">Register with Google</span>
+      </Button>
     </div>
   );
 };

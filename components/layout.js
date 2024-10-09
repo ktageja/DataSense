@@ -7,6 +7,7 @@ import { useRouter } from "next/router";
 import { useAtom } from "jotai";
 import { userAtom } from "@/store/store";
 import { readToken } from "@/lib/authenticate";
+import Navbar from "./navbar";
 
 // Create Contexts for Realtime Data and Theme
 export const RealtimeDataContext = createContext(null);
@@ -51,13 +52,17 @@ const Layout = ({ children }) => {
     <ThemeContext.Provider value={theme}>
       <RealtimeDataContext.Provider value={realtimeData}>
         <div className="layout">
-          <Header />
+          <Navbar />
           <div className="content-area d-flex">
-            {" "}
             {/* Added d-flex for layout */}
-            <Sidebar />
-            <main className="main-content flex-grow-1">
-              {" "}
+            {/* {user && <Sidebar />} */}
+            <main
+              className={`${
+                user
+                  ? "main-content-with-sidebar"
+                  : "main-content-without-sidebar"
+              } flex-grow-1 `}
+            >
               {/* Main content takes available space */}
               {children}
             </main>
